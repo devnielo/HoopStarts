@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { HeaderComponent } from './core/header/header.component';
+import { PlayerListComponent } from './features/player-list/player-list.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.scss'],
+  imports: [RouterModule, HeaderComponent, PlayerListComponent],
 })
-export class AppComponent {
-  title = 'hoopstars';
-}
+export class AppComponent {}
