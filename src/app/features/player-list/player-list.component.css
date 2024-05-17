@@ -1,6 +1,30 @@
+.player-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+  width: 100%;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 img {
   border-radius: 50%;
-  object-fit: cover;
 }
 
 button:active {
@@ -18,4 +42,35 @@ button:active {
   50% {
     opacity: 0.5;
   }
+}
+
+.bg-gray-300 {
+  background-color: #d1d5db;
+}
+
+.skeleton-loader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.skeleton-circle {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background-color: #d1d5db;
+  margin-bottom: 16px;
+}
+
+.skeleton-line {
+  width: 75%;
+  height: 12px;
+  border-radius: 0.25rem;
+  background-color: #d1d5db;
+  margin-bottom: 8px;
 }

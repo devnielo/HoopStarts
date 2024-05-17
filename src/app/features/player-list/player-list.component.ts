@@ -1,64 +1,91 @@
-import { Component, OnInit, HostListener, signal, ChangeDetectionStrategy, computed, inject } from '@angular/core';
+import { Component, OnInit, HostListener, ChangeDetectorRef, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PlayerService } from '../../core/services/player.service';
+import { Store, select } from '@ngrx/store';
 import { Player } from '../../core/models/player';
-import { HttpClientModule } from '@angular/common/http';
+import * as PlayerActions from '../../core/store/player.actions';
+import { selectAllPlayers, selectFavorites } from '../../core/store/player.selectors';
+import { Observable } from 'rxjs';
+import { map, take } from 'rxjs/operators';
 
 @Component({
   selector: 'app-player-list',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule],
   templateUrl: './player-list.component.html',
-  styleUrls: ['./player-list.component.scss'],
+  styleUrls: ['./player-list.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlayerListComponent implements OnInit {
-  private playerService = inject(PlayerService);
-  players = signal<Player[]>([]);
-  displayedPlayers = signal<Player[]>([]);
-  selectedPlayers = signal<Set<Player>>(new Set<Player>());
-  offset = signal(0);
-  limit = 100;
-  loading = signal(false);
+  private store = inject(Store);
+  private cdr = inject(ChangeDetectorRef);
+  players$: Observable<Player[]> = this.store.pipe(select(selectAllPlayers));
+  favorites$: Observable<Player[]> = this.store.pipe(select(selectFavorites));
+  displayedPlayers: Player[] = [];
+  allPlayers: Player[] = [];
+  loading = true;
+  offset = 0;
+  limit = 22;
+  skeletonArray: number[] = Array.from({ length: 20 }, (_, i) => i);
 
   ngOnInit(): void {
-    this.loadPlayers();
-  }
-
-  loadPlayers(): void {
-    if (this.loading()) return;
-    this.loading.set(true);
-    this.playerService.getPlayers().subscribe(allPlayers => {
-      this.players.set(allPlayers);
-      this.loadMorePlayers();
-      this.loading.set(false);
+    console.log('Component initialized');
+    this.players$.subscribe(players => {
+      console.log('Players from store (ngOnInit):', players.length, players);
+      this.allPlayers = players;
+      if (this.allPlayers.length === 0) {
+        this.loadPlayers();
+      } else {
+        this.loadMorePlayers();
+        this.loading = false;
+        this.cdr.detectChanges(); // Forzar la detección de cambios
+        console.log('Loading state:', this.loading);
+      }
     });
   }
 
+  loadPlayers(): void {
+    console.log('Loading players');
+    this.store.dispatch(PlayerActions.loadPlayers());
+  }
+
   loadMorePlayers(): void {
-    const currentLength = this.displayedPlayers().length;
-    const newBatch = this.players().slice(currentLength, currentLength + this.limit);
-    this.displayedPlayers.update(players => [...players, ...newBatch]);
-  }
-
-  togglePlayerSelection(player: Player): void {
-    const currentSelection = this.selectedPlayers();
-    if (currentSelection.has(player)) {
-      currentSelection.delete(player);
-    } else if (currentSelection.size < 3) {
-      currentSelection.add(player);
-    }
-    this.selectedPlayers.set(new Set(currentSelection));
-  }
-
-  isSelected(player: Player): boolean {
-    return this.selectedPlayers().has(player);
+    const nextOffset = this.offset + this.limit;
+    const nextBatch = this.allPlayers.slice(this.offset, nextOffset);
+    this.displayedPlayers = [...this.displayedPlayers, ...nextBatch];
+    this.offset = nextOffset;
+    this.loading = false;
+    this.cdr.detectChanges(); // Forzar la detección de cambios
   }
 
   @HostListener('window:scroll', [])
   onScroll(): void {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2) {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 2 && !this.loading) {
+      console.log('Scrolled to bottom. Loading more players...');
       this.loadMorePlayers();
     }
+  }
+
+  togglePlayerSelection(player: Player): void {
+    this.favorites$.pipe(take(1)).subscribe(favorites => {
+      if (favorites.some(fav => fav.id === player.id)) {
+        this.store.dispatch(PlayerActions.removeFavorite({ player }));
+      } else if (favorites.length < 3) {
+        this.store.dispatch(PlayerActions.addFavorite({ player }));
+      }
+    });
+  }
+
+  removeFavorite(player: Player): void {
+    this.store.dispatch(PlayerActions.removeFavorite({ player }));
+  }
+
+  isSelected(player: Player): Observable<boolean> {
+    return this.favorites$.pipe(
+      map(favorites => favorites.some(fav => fav.id === player.id))
+    );
+  }
+
+  trackByPlayer(index: number, player: Player): number {
+    return player.id;
   }
 }

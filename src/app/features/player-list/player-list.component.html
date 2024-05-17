@@ -1,29 +1,43 @@
-<!-- src/app/features/player-list/player-list.component.html -->
 <div class="player-list flex justify-center items-center flex-wrap gap-4 p-4">
-  @if (loading()) {
-    @for ( i of [1, 2, 3, 4, 5, 6, 7]; track i) {
-      <div class="card animate-pulse w-1/5 flex flex-col items-center p-4 border rounded shadow bg-white">
-        <div class="w-24 h-24 bg-gray-300 rounded-full mb-4"></div>
-        <div class="h-6 bg-gray-300 rounded w-3/4 mb-2"></div>
-        <div class="h-6 bg-gray-300 rounded w-1/2"></div>
-      </div>
-    }
+  @if (loading && displayedPlayers.length === 0) {
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 p-4">
+      @for (i of skeletonArray; track i) {
+        <div class="card skeleton-loader animate-pulse">
+          <div class="skeleton-circle"></div>
+          <div class="skeleton-line"></div>
+          <div class="skeleton-line"></div>
+        </div>
+      }
+    </div>
   } @else {
-    @for (player of displayedPlayers(); track player) {
-      <div class="card w-1/5 flex flex-col items-center p-4 border rounded shadow bg-white">
-        @if (player.photo) {
-          <img [src]="'https://hoopgrids.com/assets/players/' + player.id + '.png'" alt="{{player.name}}" class="w-24 h-24 rounded-full mb-4 object-cover" />
-        } @else {
-          <img src="https://hoopgrids.com/assets/players/silhouette.png" alt="No Photo" class="w-24 h-24 rounded-full mb-4 object-cover" />
-        }
-        <p class="text-center truncate">{{ player.name }}</p>
-        <button (click)="togglePlayerSelection(player)" class="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
-          @if (isSelected(player)) {
-            Unselect
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 p-4">
+      <ng-container *ngFor="let player of displayedPlayers; trackBy: trackByPlayer">
+        <div class="card">
+          @if (player.photo) {
+            <img [src]="'https://hoopgrids.com/assets/players/' + player.id + '.png'" alt="{{ player.name }}" class="w-24 h-24 rounded-full mb-4 object-cover" />
           } @else {
-            Add to Favorite
+            <img src="https://hoopgrids.com/assets/players/silhouette.png" alt="No Photo" class="w-24 h-24 rounded-full mb-4 object-cover" />
           }
-        </button>
+          <p class="text-center truncate">{{ player.name }}</p>
+          <button (click)="togglePlayerSelection(player)" class="mt-2 p-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+            @if ((isSelected(player) | async) === true) {
+              Unselect
+            } @else {
+              Add to Favorite
+            }
+          </button>
+        </div>
+      </ng-container>
+    </div>
+    @if (loading && displayedPlayers.length > 0) {
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-4 p-4">
+        @for (i of skeletonArray; track i) {
+          <div class="card skeleton-loader animate-pulse">
+            <div class="skeleton-circle"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+          </div>
+        }
       </div>
     }
   }
