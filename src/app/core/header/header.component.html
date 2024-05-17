@@ -1,23 +1,22 @@
 <header class="bg-gray-800 text-white p-4 flex justify-between items-center">
-  <div>
+  <div class="w-1/3">
     <div class="logo font-bold">HoopStars</div>
-    <div class="text-lg">Select your 3 favorite NBA to reveal the secret!</div>
+    <div class="text-lg">Select your 3 favorite NBA players to reveal the secret!</div>
   </div>
-  <input
-    type="text"
-    (input)="search($event)"
-    placeholder="Search players..."
-    class="p-2 rounded black text-[#171717]"
-  />
-  <div class="flex space-x-4">
+  <div class="w-1/3">
+    <input
+      #searchInput
+      type="text"
+      (input)="search($event)"
+      placeholder="Search players..."
+      class="p-2 rounded text-[#171717] w-full"
+    />
+  </div>
+  <div class="w-1/3 flex space-x-4 items-center justify-end">
     <ng-container *ngFor="let favorite of favorites$ | async">
       <div class="relative group">
         <img
-          [src]="
-            favorite.photo
-              ? 'https://hoopgrids.com/assets/players/' + favorite.id + '.png'
-              : 'https://hoopgrids.com/assets/players/silhouette.png'
-          "
+          [src]="favorite.photo ? 'https://hoopgrids.com/assets/players/' + favorite.id + '.png' : 'https://hoopgrids.com/assets/players/silhouette.png'"
           alt="{{ favorite.name }}"
           class="w-12 h-12 rounded-full object-cover"
         />
@@ -34,5 +33,6 @@
         </button>
       </div>
     </ng-container>
+    <button *ngIf="hasThreeFavorites" class="bg-green-500 text-white rounded px-4 py-2">Reveal secret!</button>
   </div>
 </header>

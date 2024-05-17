@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, ViewChild, ElementRef, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Store, select } from '@ngrx/store';
 import { Player } from '../../core/models/player';
@@ -18,8 +18,16 @@ import { FormsModule } from '@angular/forms';
 export class HeaderComponent implements OnInit {
   private store = inject(Store);
   favorites$: Observable<Player[]> = this.store.pipe(select(selectFavorites));
+  hasThreeFavorites: boolean = false;
 
-  ngOnInit(): void {}
+  @Output() searchQuery = new EventEmitter<string>();
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
+
+  ngOnInit(): void {
+    this.favorites$.subscribe((favorites) => {
+      this.hasThreeFavorites = favorites.length === 3;
+    });
+  }
 
   removeFavorite(player: Player): void {
     this.store.dispatch(PlayerActions.removeFavorite({ player }));
@@ -27,6 +35,13 @@ export class HeaderComponent implements OnInit {
 
   search(event: Event): void {
     const query = (event.target as HTMLInputElement).value.toLowerCase();
-    console.log('Search query:', query);
+    this.searchQuery.emit(query);
+  }
+
+  clearSearch(): void {
+    if (this.searchInput) {
+      this.searchInput.nativeElement.value = '';
+      this.searchQuery.emit('');
+    }
   }
 }

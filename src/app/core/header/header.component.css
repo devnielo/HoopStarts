@@ -13,6 +13,7 @@ input {
   border-radius: 0.25rem;
   border: none;
   outline: none;
+  width: 100%;
 }
 
 .relative {
@@ -39,4 +40,13 @@ button {
   border: none;
   outline: none;
   cursor: pointer;
+}
+
+button[disabled] {
+  background-color: #a0aec0;
+  cursor: not-allowed;
+}
+
+button.bg-green-500 {
+  background-color: #48bb78;
 }

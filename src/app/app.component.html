@@ -1,2 +1,2 @@
-<app-header></app-header>
-<router-outlet></router-outlet>
+<app-header (searchQuery)="playerList.onSearch($event)" #headerComponent></app-header>
+<app-player-list #playerList (clearSearch)="headerComponent.clearSearch()"></app-player-list>
