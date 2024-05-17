@@ -1,4 +1,3 @@
-// src/app/core/services/player.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
@@ -10,7 +9,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root'
 })
 export class PlayerService {
-  private apiUrl = environment.apiUrl;;
+  private apiUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
