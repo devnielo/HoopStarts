@@ -27,7 +27,7 @@ export const playerReducer = createReducer(
   initialState,
   on(PlayerActions.loadPlayersSuccess, (state, { players }) => ({
     ...state,
-    players: [...players],
+    players,
     error: null,
   })),
   on(PlayerActions.loadPlayersFailure, (state, { error }) => ({
@@ -35,19 +35,26 @@ export const playerReducer = createReducer(
     error,
   })),
   on(PlayerActions.addFavorite, (state, { player }) => {
-    const updatedFavorites = [...state.favorites, player];
-    saveFavoritesToLocalStorage(updatedFavorites);
+    const favorites = [...state.favorites, player];
+    saveFavoritesToLocalStorage(favorites);
     return {
       ...state,
-      favorites: updatedFavorites,
+      favorites,
     };
   }),
   on(PlayerActions.removeFavorite, (state, { player }) => {
-    const updatedFavorites = state.favorites.filter(fav => fav.id !== player.id);
-    saveFavoritesToLocalStorage(updatedFavorites);
+    const favorites = state.favorites.filter(fav => fav.id !== player.id);
+    saveFavoritesToLocalStorage(favorites);
     return {
       ...state,
-      favorites: updatedFavorites,
+      favorites,
+    };
+  }),
+  on(PlayerActions.removeAllFavorites, (state) => {
+    saveFavoritesToLocalStorage([]);
+    return {
+      ...state,
+      favorites: [],
     };
   })
 );

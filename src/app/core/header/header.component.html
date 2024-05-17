@@ -1,3 +1,4 @@
+<!-- src/app/features/header/header.component.html -->
 <header class="bg-gray-800 text-white p-4 flex justify-between items-center">
   <div class="w-1/3">
     <div class="logo font-bold">HoopStars</div>
@@ -33,6 +34,6 @@
         </button>
       </div>
     </ng-container>
-    <button *ngIf="hasThreeFavorites" class="bg-green-500 text-white rounded px-4 py-2">Reveal secret!</button>
+    <button *ngIf="hasThreeFavorites" class="bg-green-500 text-white rounded px-4 py-2" (click)="revealSecret()">Reveal secret!</button>
   </div>
 </header>

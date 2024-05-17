@@ -21,6 +21,7 @@ export class HeaderComponent implements OnInit {
   hasThreeFavorites: boolean = false;
 
   @Output() searchQuery = new EventEmitter<string>();
+  @Output() revealSecretEvent = new EventEmitter<void>();
   @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
   ngOnInit(): void {
@@ -43,5 +44,9 @@ export class HeaderComponent implements OnInit {
       this.searchInput.nativeElement.value = '';
       this.searchQuery.emit('');
     }
+  }
+
+  revealSecret(): void {
+    this.revealSecretEvent.emit();
   }
 }

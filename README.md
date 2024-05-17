@@ -1,27 +1,64 @@
-# Hoopstars
+# HoopStars NBA Player Selector
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.7.
+HoopStars is an Angular 17 application that allows you to select your 3 favorite NBA players. It includes a confetti animation when 3 players are selected and displays a popup with options to play again or close the window.
 
-## Development server
+## Features
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+- NBA player selection.
+- Player search functionality.
+- Favorite players stored using NgRx.
+- Confetti animation using a GIF.
+- Popup with options to play again or close.
 
-## Code scaffolding
+## Requirements
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+- Node.js (version 16 or higher)
+- Angular CLI (version 17 or higher)
 
-## Build
+## Installation
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+1. Clone the repository:
 
-## Running unit tests
+    ```sh
+    git clone https://github.com/devnielo/HoopStarts
+    cd hoopstars
+    ```
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+2. Install dependencies:
 
-## Running end-to-end tests
+    ```sh
+    npm install
+    ```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+3. Configure environment variables in `src/environments`
 
-## Further help
+## Usage
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+1. Start the application:
+
+    ```sh
+    ng serve
+    ```
+
+2. Open your browser and navigate to `http://localhost:4200`.
+
+## Project Structure
+
+- **src/app/core**: Contains models, services, and NgRx state management.
+- **src/app/features**: Contains the `PlayerListComponent` and `HeaderComponent`.
+- **src/app/app.component.ts**: Main component handling the logic for confetti animation and the popup.
+
+## Available Scripts
+
+- `ng serve`: Starts the development server.
+- `ng build`: Builds the application for production.
+- `ng test`: Runs unit tests.
+- `ng lint`: Runs the linter.
+
+## NgRx Configuration
+
+The application uses NgRx to manage the state of players and favorites. Actions, effects, reducers, and selectors are located in the `src/app/core/store` directory.
+
+## License
+
+This project is licensed under the MIT License. See the `LICENSE` file for details.

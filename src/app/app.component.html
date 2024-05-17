@@ -1,2 +1,43 @@
-<app-header (searchQuery)="playerList.onSearch($event)" #headerComponent></app-header>
-<app-player-list #playerList (clearSearch)="headerComponent.clearSearch()"></app-player-list>
+<app-header
+  (searchQuery)="playerList.onSearch($event)"
+  (revealSecretEvent)="handleRevealSecret()"
+  #headerComponent
+></app-header>
+<app-player-list
+  #playerList
+  (clearSearch)="headerComponent.clearSearch()"
+></app-player-list>
+
+<!-- Confetti Animation -->
+@if(showConfetti){
+<div class="confetti">
+  <img src="assets/explosion.gif" alt="Confetti" class="confetti-gif">
+</div>
+}
+
+<!-- Popup -->
+@if (showPopup) {
+<div
+  class="fixed inset-0 bg-gray-800 bg-opacity-75 flex justify-center items-center"
+>
+  <div class="bg-white p-6 rounded shadow-lg text-center">
+    <h2 class="text-2xl font-bold mb-4">You're an NBA Star!</h2>
+    <p class="mb-4">
+      Congratulations, you have selected your 3 favorite NBA players!
+    </p>
+    <button
+      class="bg-green-500 text-white px-4 py-2 rounded mr-2"
+      (click)="handlePlayAgain()"
+    >
+      Play Again
+    </button>
+    <button
+      class="bg-red-500 text-white px-4 py-2 rounded"
+      (click)="handleClosePopup()"
+    >
+      Close
+    </button>
+  </div>
+</div>
+
+}
